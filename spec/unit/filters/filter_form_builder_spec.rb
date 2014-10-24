@@ -52,7 +52,7 @@ describe ActiveAdmin::Filters::ViewHelper do
     end
 
     it "should only generate the form once" do
-      expect(body.to_s.scan(/q\[title_contains\]/).size).to eq 1
+      expect(body.to_s.scan(/q\[title_cont\]/).size).to eq 1
     end
 
     it "should generate a clear filters link" do
@@ -71,20 +71,20 @@ describe ActiveAdmin::Filters::ViewHelper do
   describe "string attribute" do
     let(:body) { filter :title }
 
-    it "should generate a select option for starts with" do
-      expect(body).to have_tag("option", "Starts with", attributes: { value: 'title_starts_with' })
+    it "should generate a select option for start with" do
+      expect(body).to have_tag("option", "Starts with", attributes: { value: 'title_start' })
     end
 
     it "should generate a select option for ends with" do
-      expect(body).to have_tag("option", "Ends with", attributes: { value: 'title_ends_with' })
+      expect(body).to have_tag("option", "Ends with", attributes: { value: 'title_end' })
     end
 
     it "should generate a select option for contains" do
-      expect(body).to have_tag("option", "Contains", attributes: { value: 'title_contains' })
+      expect(body).to have_tag("option", "Contains", attributes: { value: 'title_cont' })
     end
 
     it "should generate a text field for input" do
-      expect(body).to have_tag("input", attributes: { name: 'q[title_contains]' })
+      expect(body).to have_tag("input", attributes: { name: 'q[title_cont]' })
     end
 
     it "should have a proper label" do
@@ -98,13 +98,13 @@ describe ActiveAdmin::Filters::ViewHelper do
     end
 
     it "should select the option which is currently being filtered" do
-      scope = Post.search title_starts_with: "foo"
+      scope = Post.search title_start: "foo"
       body = render_filter scope, title: {}
-      expect(body).to have_tag("option", "Starts with", attributes: { value: "title_starts_with", selected: "selected" })
+      expect(body).to have_tag("option", "Starts with", attributes: { value: "title_start", selected: "selected" })
     end
 
     context "with predicate" do
-      %w[eq equals cont contains start starts_with end ends_with].each do |predicate|
+      %w[eq cont start end].each do |predicate|
         describe "'#{predicate}'" do
           let(:body) { filter :"title_#{predicate}" }
 
@@ -124,7 +124,7 @@ describe ActiveAdmin::Filters::ViewHelper do
     let(:body) { filter :body }
 
     it "should generate a search field for a text attribute" do
-      expect(body).to have_tag("input", attributes: { name: "q[body_contains]"})
+      expect(body).to have_tag("input", attributes: { name: "q[body_cont]"})
     end
 
     it "should have a proper label" do
@@ -171,7 +171,7 @@ describe ActiveAdmin::Filters::ViewHelper do
     let(:body) { filter :id }
 
     it "should generate a select option for equal to" do
-      expect(body).to have_tag("option", "Equals", attributes: { value: 'id_equals' })
+      expect(body).to have_tag("option", "Equals", attributes: { value: 'id_eq' })
     end
     it "should generate a select option for greater than" do
       expect(body).to have_tag("option", "Greater than")
@@ -180,12 +180,12 @@ describe ActiveAdmin::Filters::ViewHelper do
       expect(body).to have_tag("option", "Less than")
     end
     it "should generate a text field for input" do
-      expect(body).to have_tag("input", attributes: { name: 'q[id_equals]' })
+      expect(body).to have_tag("input", attributes: { name: 'q[id_eq]' })
     end
     it "should select the option which is currently being filtered" do
-      scope = Post.search id_greater_than: 1
+      scope = Post.search id_gt: 1
       body = render_filter scope, id: {}
-      expect(body).to have_tag("option", "Greater than", attributes: { value: "id_greater_than", selected: "selected" })
+      expect(body).to have_tag("option", "Greater than", attributes: { value: "id_gt", selected: "selected" })
     end
   end
 
@@ -238,8 +238,8 @@ describe ActiveAdmin::Filters::ViewHelper do
 
       it "should generate a numeric filter" do
         expect(body).to have_tag 'label', 'Author' # really this should be Author ID :/
-        expect(body).to have_tag 'option', attributes: { value: 'author_id_less_than' }
-        expect(body).to have_tag 'input',  attributes: { id: 'q_author_id', name: 'q[author_id_equals]'}
+        expect(body).to have_tag 'option', attributes: { value: 'author_id_lt' }
+        expect(body).to have_tag 'input',  attributes: { id: 'q_author_id', name: 'q[author_id_eq]'}
       end
     end
 
@@ -376,23 +376,23 @@ describe ActiveAdmin::Filters::ViewHelper do
       context "with #{verb.inspect} proc" do
         it "#{should} be displayed if true" do
           body = filter :body, verb => proc{ true }
-          expect(body).send if_true,  have_tag("input", attributes: {name: "q[body_contains]"})
+          expect(body).send if_true,  have_tag("input", attributes: {name: "q[body_cont]"})
         end
         it "#{should} be displayed if false" do
           body = filter :body, verb => proc{ false }
-          expect(body).send if_false, have_tag("input", attributes: {name: "q[body_contains]"})
+          expect(body).send if_false, have_tag("input", attributes: {name: "q[body_cont]"})
         end
         it "should still be hidden on the second render" do
           filters = {body: { verb => proc{ verb == :unless }}}
           2.times do
             body = render_filter scope, filters
-            expect(body).not_to have_tag "input", attributes: {name: "q[body_contains]"}
+            expect(body).not_to have_tag "input", attributes: {name: "q[body_cont]"}
           end
         end
         it "should successfully keep rendering other filters after one is hidden" do
           filters = {body: { verb => proc{ verb == :unless }}, author: {}}
           body    = render_filter scope, filters
-          expect(body).not_to have_tag "input",  attributes: {name: "q[body_contains]"}
+          expect(body).not_to have_tag "input",  attributes: {name: "q[body_cont]"}
           expect(body).to     have_tag "select", attributes: {name: "q[author_id_eq]"}
         end
       end
