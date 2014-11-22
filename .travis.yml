@@ -8,6 +8,9 @@ gemfile:
   - gemfiles/rails_3.2.gemfile
   - gemfiles/rails_4.1.gemfile
 
+matrix:
+  fast_finish: true
+
 sudo: false
 
 cache: bundler
