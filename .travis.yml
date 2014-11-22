@@ -13,7 +13,10 @@ matrix:
 
 sudo: false
 
-cache: bundler
+cache:
+  directories:
+  - vendor/bundle
+  - spec/rails
 
 bundler_args: --without development
 
