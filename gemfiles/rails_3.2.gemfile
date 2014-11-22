@@ -13,7 +13,7 @@ gem "pry"
 gem "appraisal"
 
 group :development do
-  gem "better_errors", "< 2"
+  gem "better_errors", nil
   gem "binding_of_caller"
   gem "rack-mini-profiler"
   gem "flamegraph"

@@ -4,4 +4,10 @@ end
 
 appraise "rails_4.1" do
   gem "rails", "~> 4.1.7"
+
+  # Thes dependencies are defined becose
+  # of a bundler resolving issue
+  # gem "sprockets",        "~> 2.11.3"
+  # gem "sprockets-rails",  ""
+  gem "sass-rails",       "4.0.4"
 end

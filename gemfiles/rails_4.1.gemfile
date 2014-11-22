@@ -11,9 +11,10 @@ gem "rake", :require => false
 gem "parallel_tests"
 gem "pry"
 gem "appraisal"
+gem "sass-rails", "4.0.4"
 
 group :development do
-  gem "better_errors", "< 2"
+  gem "better_errors", nil
   gem "binding_of_caller"
   gem "rack-mini-profiler"
   gem "flamegraph"
